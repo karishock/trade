@@ -1,40 +1,13 @@
-from datetime import datetime as dt
-import datetime
-
-import telebot
-from telebot.types import Message, ReplyKeyboardMarkup as RKM, KeyboardButton as KB
-from telebot.types import InlineKeyboardMarkup as IKM, InlineKeyboardButton as IB
-from telebot.types import ReplyKeyboardRemove as Rkr
-
-TOKEN = "7752894976:AAHIL-Yt1y6CDaSWJS9wurF5W4U6hGeZ34Y"
-
-# Блок создания бота
-bot = telebot.TeleBot(TOKEN)
-clear_kb = Rkr() # Удаление  клавиатуры
-
-
-# ===БЛОК обработки команд===
-@bot.message_handler(commands=['menu', 'start'])
-def handle_commands(mes: Message):
-    """
-    Обработчик команд:
-    /menu и /start  - вызовет основное меню команд.
-    
-    """
-    text = """Добро пожаловать!
-    Тут будет потом инструкция о том, как пользоваться приложением и команды, чтобы облегчить работу с ботом.
-    /start - начать работу с ботом
-    /info - информация о разработчике"""
-    bot.send_message(mes.chat.id, text)
-
-@bot.message_handler(commands=['info'])
-def handle_commands(mes: Message):
-    """
-    Обработчик команд:
-    /info  - выведет информацию о разработчике.
-    """
-    text = """Бот разработан Манаевой Кариной
-    Почта: sowa_sidit_na_vetke@mail.ru"""
-    bot.send_message(mes.chat.id, text)
-
 bot.polling()
+import os
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
+TOKEN = os.getenv("BOT_TOKEN")
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Бот работает!")
+
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.run_polling()
